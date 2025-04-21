@@ -1,0 +1,10 @@
+*.pth
+*.pyc
+depth_anything_v2/
+data/
+depth_images/
+random_images/
+crater_detections/
+binary_images/
+*.h5
+*.pt
