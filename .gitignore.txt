@@ -1,0 +1,6 @@
+*.pth
+*.pyc
+depth_anything_v2/
+data/
+*.h5
+*.pt
