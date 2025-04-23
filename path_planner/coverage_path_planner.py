@@ -61,13 +61,28 @@ class CoveragePathPlanner:
                     grid_graph.add_node((i, j))
         
         # Add edges between adjacent cells
+        # for i in range(self.height):
+        #     for j in range(self.width):
+        #         if self.cell_map[i, j] == 1:
+        #             # Check neighbors
+        #             for ni, nj in [(i+1, j), (i, j+1), (i-1, j), (i, j-1)]:  # Added all four directions
+        #                 if 0 <= ni < self.height and 0 <= nj < self.width and self.cell_map[ni, nj] == 1:
+        #                     grid_graph.add_edge((i, j), (ni, nj))
+
+        # Add edges between orthogonally adjacent cells ONLY
+        directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]  # Right, Down, Left, Up
+        
         for i in range(self.height):
             for j in range(self.width):
                 if self.cell_map[i, j] == 1:
-                    # Check neighbors
-                    for ni, nj in [(i+1, j), (i, j+1), (i-1, j), (i, j-1)]:  # Added all four directions
-                        if 0 <= ni < self.height and 0 <= nj < self.width and self.cell_map[ni, nj] == 1:
+                    # Check only orthogonal neighbors
+                    for di, dj in directions:
+                        ni, nj = i + di, j + dj
+                        if (0 <= ni < self.height and 
+                            0 <= nj < self.width and 
+                            self.cell_map[ni, nj] == 1):
                             grid_graph.add_edge((i, j), (ni, nj))
+        
         
         return grid_graph
     
@@ -177,9 +192,13 @@ class CoveragePathPlanner:
             # Try to extend horizontally
             current_j = j + 1
             while (i, current_j) in graph.nodes() and (i, current_j) not in visited:
-                pattern.append((i, current_j))
-                visited.add((i, current_j))
-                current_j += 1
+                # Check for orthogonal movement
+                if self._is_orthogonal_neighbor((i, current_j-1), (i, current_j)):
+                    pattern.append((i, current_j))
+                    visited.add((i, current_j))
+                    current_j += 1
+                else:
+                    break
             
             # Check if we can form a 2xn pattern
             if len(pattern) >= 2:
@@ -187,8 +206,12 @@ class CoveragePathPlanner:
                 second_row = []
                 for _, j_val in pattern:
                     if (i+1, j_val) in graph.nodes() and (i+1, j_val) not in visited:
-                        second_row.append((i+1, j_val))
-                        visited.add((i+1, j_val))
+                        # Ensure orthogonal connection
+                        if self._is_orthogonal_neighbor((i, j_val), (i+1, j_val)):
+                            second_row.append((i+1, j_val))
+                            visited.add((i+1, j_val))
+                        else:
+                            break
                     else:
                         # Cannot form a complete 2xn pattern
                         break
@@ -214,7 +237,7 @@ class CoveragePathPlanner:
             visited.add(node)
             # Find unvisited neighbors
             for neighbor in graph.neighbors(node):
-                if neighbor not in visited:
+                if neighbor not in visited and self._is_orthogonal_neighbor(node, neighbor):
                     pairs.append([node, neighbor])
                     visited.add(neighbor)
                     break
@@ -241,7 +264,7 @@ class CoveragePathPlanner:
             for mc2 in mega_cells:
                 i1, j1 = mc1
                 i2, j2 = mc2
-                if abs(i1-i2) + abs(j1-j2) == 1:  # Manhattan distance of 1
+                if (abs(i1-i2) == 1 and j1 == j2) or (abs(j1-j2) == 1 and i1 == i2):  # Only orthogonal connections
                     mega_cell_graph.add_edge(mc1, mc2)
         
         # Create minimum spanning tree (MST)
@@ -300,6 +323,11 @@ class CoveragePathPlanner:
             for i in range(len(extended_cycle)):
                 cell1 = extended_cycle[i]
                 cell2 = extended_cycle[(i+1) % len(extended_cycle)]
+
+                # Skip if cells not in grid map coverage area
+                if (self.cell_map[cell1[0], cell1[1]] == 0 or 
+                    self.cell_map[cell2[0], cell2[1]] == 0):
+                    continue
                 
                 # Check potential connections from cell1 to structure
                 for struct_idx, struct_cell in enumerate(structure):
@@ -500,7 +528,15 @@ class CoveragePathPlanner:
                         
                     try:
                         # Find shortest path using A* algorithm
-                        shortest_path = nx.astar_path(self.grid_graph, path_point, cell)
+                        # shortest_path = nx.astar_path(self.grid_graph, path_point, cell)
+                        shortest_path = nx.astar_path(self.grid_graph, path_point, cell, 
+                            heuristic=lambda a, b: self._distance(a, b))
+                        
+                        valid_path = True
+                        for path_cell in shortest_path:
+                            if self.cell_map[path_cell[0], path_cell[1]] == 0:
+                                valid_path = False
+                                break
                         dist = len(shortest_path) - 1  # Length of path minus 1 = number of edges
                         
                         if dist < min_distance:
@@ -522,7 +558,7 @@ class CoveragePathPlanner:
         
         return complete_path
     
-    def _distance(self, cell1, cell2):
+    def euclidean_distance(self, cell1, cell2):
         """Calculate Euclidean distance between path points of two cells."""
         # Check if both cells are in path_points
         if cell1 in self.path_points and cell2 in self.path_points:
@@ -532,6 +568,21 @@ class CoveragePathPlanner:
         else:
             # If either cell is not in path_points, return a large distance
             return float('inf')
+        
+    def _distance(self, cell1, cell2):
+        """
+        Calculate Manhattan distance between two cells (no diagonal movement).
+        """
+        i1, j1 = cell1
+        i2, j2 = cell2
+        return abs(i1 - i2) + abs(j1 - j2)
+    
+    def _is_orthogonal_neighbor(self, cell1, cell2):
+        """Check if two cells are orthogonal neighbors (no diagonal)."""
+        i1, j1 = cell1
+        i2, j2 = cell2
+        manhattan_dist = abs(i1 - i2) + abs(j1 - j2)
+        return manhattan_dist == 1  # Exactly 1 step in Manhattan distance = orthogonal neighbor
     
     def plan_coverage_path(self):
         """Plan the complete coverage path."""
@@ -640,7 +691,7 @@ class CoveragePathPlanner:
             Patch(facecolor=dark_purple, label='Exempt from Coverage'),
             Patch(facecolor='red', label='Coverage Path')
         ]
-        plt.legend(handles=legend_elements, loc='upper right', fontsize=10)
+        # plt.legend(handles=legend_elements, loc='upper right', fontsize=10)
         
         plt.tight_layout()
         plt.show()

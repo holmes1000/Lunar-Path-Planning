@@ -98,10 +98,13 @@ if __name__ == "__main__":
 
         # Create grid map
         print(img.shape)
-        grid_size = 20
+        grid_size = 1
         grid_map = create_grid_map(img.shape, regions, grid_size=grid_size)
 
         fig = display_grid_map(grid_map, img, regions, grid_size=grid_size)
+        img_scaled = (img * 255).astype(np.uint8)
+        save_img(img_scaled, f"yolo_images/crater_detect_result_{i}.png")
+        save_img(grid_map, f"yolo_images/grid_map_result_{i}.png")
         plt.show()
 
         

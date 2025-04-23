@@ -1,3 +1,6 @@
+# Author
+Samara Holmes
+
 # Background
 This program is an extension on the following papers:
 
@@ -23,8 +26,8 @@ Using real Lunar terrain data, generate maps to conduct coverage path planning f
 1. Load the crop from /images
 2. Do image processing (sobel filters, binary thresholding, morphological filter)
 3. Save those images to /binary_images
-2. Detect the craters (from images in /binary_images)
-3. Generate DepthAnything images (from images in /random_images)
+4. Detect the craters (from images in /binary_images)
+5. Generate DepthAnything images (from images in /random_images) and grid maps for comparison
 
 ## Phase 3: Prepare the data for path planning (generate_obstacles.py)
 1. Take the crater detections and turn them into obstacles to be used for the coverage method (combine visuals from detect_crater.py and run_depth_anything.py)
@@ -32,18 +35,21 @@ Using real Lunar terrain data, generate maps to conduct coverage path planning f
 3. Generate a grid map
 
 ## Phase 4: Conduct coverage path planning for one robot
-1. 
-2. 
-3. Generate the total coverage rate along with the path length for the robot
-4. Save path plots to with coverage rates and path lengths to /paths/single_robot
+1. Use the algorithm from [2] to create workflow
+2. Conduct cell classification
+3. Look for Hamiltonian cycles
+4. Look for Hamiltonian paths
+5. Combine
+6. Generate the total coverage rate along with the path length for the robot
+7. Save path plots to with coverage rates and path lengths to /paths/single_robot
 
-## Phase 5: Conduct coverage path planning for multiple robots
+## Phase 5: Conduct coverage path planning for multiple robots (Not implemented yet)
 1. 
 2. 
 3. Generate the total coverage rate along with the path length for each robot
 4. Save path plots to with coverage rates and path lengths to /paths/multi_robot
 
-## Phase X: Create a UNet Model
+## Phase X: Create a UNet Model (Not implemented yet)
 1. Load the data, and generate several randomly cropped images
 2. Annotate the data using CVAT
 3. Generate a prediction mask
@@ -55,7 +61,7 @@ Using real Lunar terrain data, generate maps to conduct coverage path planning f
     - For certain craters, you can go through the middle
 
 ## Phase Z: Try with other models and compare
-1. Try a YOLO model for crater detection
+1. Try a YOLO model for crater detection (Implemented)
 2. Use DeepMoon for crater detection
 3. Create crater detection graph comparison
 
@@ -72,6 +78,10 @@ https://wms.lroc.asu.edu/lroc/view_rdr/WAC_ROI_NEARSIDE_DAWN
 
 
 # Citations
+
+
+# Presentation
+https://youtu.be/iT9bRe6xMaM
 
 
 

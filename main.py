@@ -75,8 +75,8 @@ if __name__ == "__main__":
         print(f"  Error: {message}")
     
     # Visualize
-    visualize_path(planner, cell_path)
-    # planner.visualize()
+    # visualize_path(planner, cell_path)
+    planner.visualize()
     
     # Calculate path length
     path_length = 0
@@ -85,7 +85,8 @@ if __name__ == "__main__":
         x2, y2 = path_points[(i+1) % len(path_points)]
         path_length += np.sqrt((x2-x1)**2 + (y2-y1)**2)
     
-    print(f"Region: {grid_map}")
+    print(f"Grid Map: {grid_map}")  # Grid map uses 1 as obstacles
+    print(f"Cell Map: {planner.cell_map}")  # Cell map uses 0 as obstacles
     print(f"Total path length: {path_length:.2f}")
     print(f"Number of cells covered: {len(cell_path)}")
     print(f"Percent Coverage: {(len(cell_path)/(np.sum(grid_map))) * 100:.2f}%")
@@ -93,3 +94,5 @@ if __name__ == "__main__":
     print(f"  - Trunk cells: {len(planner.trunk_cells)}")
     print(f"  - Branch cells: {len(planner.branch_cells)}")
     print(f"  - Subsidiary cells: {len(planner.subsidiary_cells)}")
+    print(f"  - Cells exempt from coverage: {grid_map.size - (len(planner.subsidiary_cells) + len(planner.branch_cells) + len(planner.trunk_cells))}")
+    print(f"  - Percentage of cells exempt from coverage: { (grid_map.size - ((len(planner.subsidiary_cells) + len(planner.branch_cells) + len(planner.trunk_cells)))) / grid_map.size * 100}")

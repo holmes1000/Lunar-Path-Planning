@@ -132,8 +132,8 @@ def detect_depthanything_craters(img, imgID):
     regions = measure.regionprops(labelled_img)
     
     # Filter regions based on size and circularity
-    min_area = 100
-    max_area = 10000
+    min_area = 25
+    max_area = 1000
     
     filtered_regions = []
     for region in regions:
@@ -195,7 +195,7 @@ if __name__ == "__main__":
 
         # Create grid map
         print(img.shape)
-        grid_size = 20
+        grid_size = 25
         grid_map = create_grid_map(img.shape, regions, grid_size=grid_size)
 
         fig = display_grid_map(grid_map, img, regions, grid_size=grid_size)
