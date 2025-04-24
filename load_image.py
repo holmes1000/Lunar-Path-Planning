@@ -96,6 +96,6 @@ if __name__ == "__main__":
         # show_img(img_crop)
 
         # Save the crop to a file with a unique name
-        save_img(img_crop, f"random_images/lunar_image_{i+1}.tiff")
+        save_img(img_crop, f"images/lunar_image_{i+1}.tiff")
     # --------------------------------------------
 

@@ -168,7 +168,7 @@ if __name__ == "__main__":
     for i in range(len(images)): 
         labelled_img, regions = detect_craters(images[i], i)
         img = display_craters_on_image(labelled_img, regions, i)
-        save_img(img, f"crater_detections/detection_image_{i}.tiff")
+        save_img(img, f"crater_detections/detection_image_{i+1}.tiff")
 
         # Create grid map
         print(img.shape)

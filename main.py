@@ -76,7 +76,7 @@ if __name__ == "__main__":
     
     # Visualize
     # visualize_path(planner, cell_path)
-    planner.visualize()
+    # planner.visualize()
     
     # Calculate path length
     path_length = 0

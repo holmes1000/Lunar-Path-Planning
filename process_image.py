@@ -94,4 +94,4 @@ if __name__ == "__main__":
 
     for i in range(len(images)): 
         img = process_img(images[i], i)
-        save_img(img, f"binary_images/lunar_image_{i}.tiff")
+        save_img(img, f"binary_images/lunar_image_{i+1}.tiff")

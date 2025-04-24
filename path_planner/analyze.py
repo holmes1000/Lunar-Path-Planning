@@ -12,3 +12,4 @@ def export_image_comparisons(dir1, dir2, dir3, dir4):
     pass
 
 if __name__ == "__main__":
+    print("Not yet implemented")

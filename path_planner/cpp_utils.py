@@ -2,11 +2,9 @@
 Samara Holmes
 Spring 2025
 
-Initial coverage path planning program
+Coverage path planning utils (visualization and path validity)
 
 Assumptions:
-
-Robot starts at bottom-left corner (0,0)
 Robot cannot move diagonally
 
 """
@@ -38,17 +36,6 @@ def visualize_path(planner, path=None):
     # Fill the visualization map with the appropriate colors
     for i in range(planner.height):
         for j in range(planner.width):
-            # if planner.grid_map[i, j] == 0:  # Exempt from coverage
-            #     visualization_map[i, j] = dark_purple
-            # elif (i, j) in planner.trunk_cells:
-            #     visualization_map[i, j] = yellow
-            # elif (i, j) in planner.branch_cells:
-            #     visualization_map[i, j] = green
-            # elif (i, j) in planner.subsidiary_cells:
-            #     visualization_map[i, j] = green_blue
-            # else:
-            #     # Any other cell (should be rare)
-            #     visualization_map[i, j] = np.array([0.9, 0.9, 0.9])  # Light gray
             if (i, j) in planner.trunk_cells:
                 visualization_map[i, j] = yellow
             elif (i, j) in planner.branch_cells:

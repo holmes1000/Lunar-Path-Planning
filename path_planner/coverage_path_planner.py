@@ -131,7 +131,7 @@ class CoveragePathPlanner:
         for i in range(self.height):
             for j in range(self.width):
                 if self.cell_map[i, j] == 1:
-                    # Always use the exact center of the cell as the path point
+                    # Always use the exact center of the cell as the path point (change this later?)
                     # Robot always passes through the center of each cell
                     self.path_points[(i, j)] = (i + 0.5, j + 0.5)
     
