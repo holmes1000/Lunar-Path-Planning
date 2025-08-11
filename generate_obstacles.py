@@ -33,7 +33,10 @@ def create_grid_map(img_shape, regions, grid_size=20):
     
     # Mark grid cells containing craters as obstacles (1)
     for region in regions:
-        minr, minc, maxr, maxc = region.bbox
+        if isinstance(region, tuple):
+            minc, minr, maxc, maxr = region  # Note: PIL uses (x, y) = (col, row)
+        else:
+            minr, minc, maxr, maxc = region.bbox
         
         # Convert image coordinates to grid coordinates
         grid_minr, grid_minc = minr // grid_size, minc // grid_size

@@ -1,10 +1,10 @@
 """
 Samara Holmes
-Spring 2025
+Summer 2025
 
 Program to process the image using the Faster R-CNN model
 
-Pre-trained model: https://www.kaggle.com/datasets/lincolnzh/martianlunar-crater-detection-dataset
+Reference: https://www.kaggle.com/code/benmanor/crater-object-detection-using-faster-rcnn/notebook
 """
 
 import os
@@ -220,7 +220,7 @@ if __name__ == "__main__":
     for i,data in enumerate(data_loader_test):
 
         # get the image file name for predictions file name
-        image_name = 'image no:' + str(int(data[1][0]['image_id']))
+        image_name = 'image_no_' + str(int(data[1][0]['image_id']))
         model_image = data[0][0]
         cv2_image = np.transpose(model_image.numpy()*255,(1, 2, 0)).astype(np.float32)
         cv2_image = cv2.cvtColor(cv2_image, cv2.COLOR_RGB2BGR).astype(np.float32)
@@ -284,7 +284,7 @@ if __name__ == "__main__":
             plt_image = cv2.cvtColor(cv2_image/255.0, cv2.COLOR_BGR2RGB)
             plt.imshow(plt_image)
             plt.show()
-            cv2.imwrite(f"./results/{image_name}.jpg", cv2_image)
+            cv2.imwrite(f"./rcnn_images/{image_name}.jpg", cv2_image)
         print(f"Image {i + 1} done...")
         print('-' * 50)
     print('TEST PREDICTIONS COMPLETE')

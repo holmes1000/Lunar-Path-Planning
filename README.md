@@ -29,10 +29,16 @@ Using real Lunar terrain data, generate maps to conduct coverage path planning f
 4. Detect the craters (from images in /binary_images)
 5. Generate DepthAnything images (from images in /random_images) and grid maps for comparison
 
-## Phase 3: Prepare the data for path planning (generate_obstacles.py)
+## Phase 3a: Prepare the data for path planning (generate_obstacles.py)
 1. Take the crater detections and turn them into obstacles to be used for the coverage method (combine visuals from detect_crater.py and run_depth_anything.py)
 2. Split the image and define 'areas to be covered' vs 'obstacles'
 3. Generate a grid map
+
+## Phase 3b: Generate Faster R-CNN detections and create a grid mapping
+1. Run the notebook found at https://github.com/holmes1000/Crater-Object-Detection-Using-Faster-RCNN (Optional)
+2. Copy the results into /results
+3. Run process_faster_rcnn_images.py
+4. The resulting grid maps are saved in /rcnn_images
 
 ## Phase 4: Conduct coverage path planning for one robot
 1. Use the algorithm from [2] to create workflow
@@ -168,6 +174,7 @@ Feb. 2022, ISSN: 1424-8220. DOI: 10.3390/s22031235.
 Available: https://www.kaggle.com/datasets/lincolnzh/
 martianlunar - crater - detection - dataset (visited on
 04/20/2025)
+
 
 # Presentation
 https://youtu.be/iT9bRe6xMaM
